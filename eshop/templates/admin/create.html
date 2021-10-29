@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+Добавление товара
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>
+        Добавление товара
+    </h1>
+    {% for msg in get_flashed_messages() %}
+    <div class="container">
+        <p>{{msg}}</p>
+    </div>
+    {% endfor %}
+    <form method="POST" action="{{ url_for('create') }}">
+        {{ form.csrf_token }}
+        {{ form.title(size=100, class="form-control", placeholder="Введите название") }}
+        {% if form.title.errors %}
+            <ul class="errors">
+                 {% for error in form.title.errors %}
+                    <li>{{ error }}</li>
+                 {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        {{ form.price(step=0.01, class="form-control", placeholder="Введите цену") }}
+        {% if form.price.errors %}
+            <ul class="errors">
+                 {% for error in form.price.errors %}
+                    <li>{{ error }}</li>
+                 {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        {{ form.submit(class="btn btn-success") }}
+        <!--
+        <br>
+        <p>______________________________С  < WTForms и без >________________________</p>
+        <input type="text" class="form-control" name="title" id="title" placeholder="Введите название"><br>
+        <input type="number" min="0.01" max="100000.00" step="0.01" class="form-control" name="price" id="price" placeholder="Введите цену"><br>
+        <button class="btn btn-success" type="submit">Добавить товар</button> -->
+    </form>
+</div>
+{% endblock %}

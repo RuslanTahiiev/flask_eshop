@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+Пользователи
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Пользователи</h2>
+    {% for user in users %}
+        <div class="row mb-3">
+          <div class="col-4 themed-grid-col">{{ user.username }}</div>
+          <div class="col-4 themed-grid-col">{{ user.name }}</div>
+          <div class="col-4 themed-grid-col">{{ user.email }}</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

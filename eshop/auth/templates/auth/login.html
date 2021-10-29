@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block css %}
+      <link href="{{ url_for('.static', filename='css/signin.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block title %}
+Вход
+{% endblock %}
+{% block body %}
+<body class="text-center">
+  <main class="form-signin">
+    <form method="post" action="{{ url_for('auth_bp.login') }}">
+        {{ form.csrf_token }}
+      <h1 class="h3 mb-3 fw-normal">Войдите</h1>
+        {% for msg in get_flashed_messages() %}
+            <div class="container">
+                <p>{{msg}}</p>
+            </div>
+        {% endfor %}
+        <div class="form-floating">
+          {{ form.email(type="email", class="form-control", placeholder="name@example.com") }}
+          {{ form.email.label(for="email") }}
+          {% if form.email.errors %}
+                <ul>
+                     {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                     {% endfor %}
+                </ul>
+          {% endif %}
+        </div>
+        <div class="form-floating">
+          {{ form.password(class="form-control", placeholder="Пароль") }}
+          {{ form.password.label(for="password") }}
+          {% if form.password.errors %}
+                <ul>
+                     {% for error in form.password.errors %}
+                        <li>{{ error }}</li>
+                     {% endfor %}
+                </ul>
+          {% endif %}
+        </div>
+      <!--
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Запомнить меня
+        </label>
+      </div> -->
+      {{ form.submit(class="w-100 btn btn-lg btn-primary", value="Войти") }}
+      <p class="mt-5 mb-3 text-muted">© 2021</p>
+    </form>
+      <p>Если у вас нет аккаунта, то <a href="{{ url_for('auth_bp.signup') }}">войдите</a></p>
+  </main>
+</body>
+{% endblock %}
+
