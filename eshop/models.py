@@ -88,10 +88,15 @@ class Product(db.Model, Main):
         db.Text,
         nullable=False
     )
+    creator = db.Column(
+        db.String(100),
+        db.ForeignKey('eshop_User.email')
+    )
 
-    def __init__(self, title, price):
+    def __init__(self, title, price, creator):
         self.title = title
         self.price = price
+        self.creator = creator
         self.text = 'text'
 
     def __repr__(self):

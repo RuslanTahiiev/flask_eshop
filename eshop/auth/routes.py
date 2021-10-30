@@ -42,7 +42,7 @@ def signup():
             new_user.set_password(form.password.data)
             if new_user.add_to():
                 login_user(new_user)
-                return redirect(url_for('test'))
+                return redirect(url_for('dashboard', username=form.username.data))
             else:
                 flash('ERROR')
         flash('Уже существует такой пользователь')
@@ -53,12 +53,12 @@ def signup():
 def login():
     form = LoginForm(request.form)
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard', username=current_user.username))
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(password=form.password.data):
             login_user(user)
-            return redirect(url_for('index'))
+            return redirect(url_for('dashboard', username=current_user.username))
         flash('Такого пользователя не существует или неверно введен пароль.')
         return redirect(url_for('auth_bp.login'))
     return render_template('auth/login.html', form=form)

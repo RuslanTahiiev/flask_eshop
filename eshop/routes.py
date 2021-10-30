@@ -24,7 +24,8 @@ def create():
     if form.validate_on_submit():
         new_product = Product(
                         form.title.data,
-                        form.price.data
+                        form.price.data,
+                        current_user.email
                         )
         if new_product.add_to():
             return redirect(url_for('index'))
@@ -33,7 +34,16 @@ def create():
     return render_template('admin/create.html', form=form)
 
 
+@app.route('/<username>/dashboard')
+@login_required
+def dashboard(username):
+    user = User.query.filter_by(username=username).first()
+    products = Product.query.filter_by(creator=user.email).all()
+    return render_template('admin/dashboard.html', products=products)
+
+
 @app.route('/users')
+@login_required
 def user_list():
     users = User.query.all()
     return render_template('admin/users.html', users=users)
@@ -59,5 +69,5 @@ def session_view():
     """Display session variable value."""
     return render_template(
         'session.html',
-        session_variable=str(session['redis_test'])
+        session_variable=str(session.get('redis_test'))
     )
