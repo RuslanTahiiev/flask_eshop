@@ -14,6 +14,15 @@ class Main:
             print(e)
             return False
 
+    def delete_from(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
 
 class User(UserMixin, db.Model, Main):
 

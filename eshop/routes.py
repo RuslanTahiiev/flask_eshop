@@ -34,12 +34,32 @@ def create():
     return render_template('admin/create.html', form=form)
 
 
-@app.route('/<username>/dashboard')
+@app.route('/dashboard/<username>')
 @login_required
 def dashboard(username):
     user = User.query.filter_by(username=username).first()
     products = Product.query.filter_by(creator=user.email).all()
-    return render_template('admin/dashboard.html', products=products)
+    return render_template('admin/dashboard.html', products=products, user=user)
+
+
+@app.route('/dashboard/<username>/<int:product_id>')
+@login_required
+def dashboard_product(username, product_id):
+    try:
+        product = Product.query.filter_by(id=product_id).first()
+    except Exception as e:
+        flash('ERROR')
+    return render_template('admin/product.html', product=product, username=username)
+
+
+@app.route('/dashboard/<username>/<int:product_id>/delete')
+@login_required
+def dashboard_product_delete(username, product_id):
+    product = Product.query.get_or_404(product_id)
+    if product.delete_from():
+        return redirect(url_for('dashboard', username=username))
+    else:
+        flash('ERROR')
 
 
 @app.route('/users')
@@ -47,6 +67,7 @@ def dashboard(username):
 def user_list():
     users = User.query.all()
     return render_template('admin/users.html', users=users)
+
 
 # 404 handler
 @app.errorhandler(404)
