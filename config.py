@@ -30,6 +30,10 @@ class Config:
     SESSION_TYPE = 'redis'
     SESSION_REDIS = redis.from_url(environ.get('SESSION_REDIS'))
 
+    # Flask-Security
+    SECURITY_PASSWORD_SALT = environ.get('SECURITY_PASSWORD_SALT')
+    SECURITY_PASSWORD_HASH = 'bcrypt'
+
 
 class DevConfig(Config):
 

@@ -8,6 +8,10 @@ class CreateForm(FlaskForm):
         'Title',
         [DataRequired()]
     )
+    description = StringField(
+        'Description',
+        [DataRequired()]
+    )
     price = IntegerField(
         'Price',
         [DataRequired()]

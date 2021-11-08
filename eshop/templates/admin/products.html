@@ -1,0 +1,27 @@
+{% extends 'admin/dashboard.html' %}
+    {% block content %}
+          <h2>Твои услуги</h2>
+          {% for msg in get_flashed_messages() %}
+            <div class="container">
+                <p>{{msg}}</p>
+            </div>
+          {% endfor %}
+            <div class="row">
+              <div class="col-2"><b>Название</b></div>
+              <div class="col-2"><b>Цена</b></div>
+              <div class="col-6"><b>Описание</b></div>
+              <div class="col-2"><b>Действие</b></div>
+            </div>
+            <br>
+            {% for product in products %}
+              <div class="row">
+              <div class="col-2">{{ product.title }}</div>
+              <div class="col-2">{{ product.price }}$</div>
+              <div class="col-6">{{ product.description }}</div>
+              <div class="col-2">
+                <a class="btn btn-warning btn-sm" href="{{ url_for('dashboard_product', username=current_user.username, product_id=product.id) }}">Изменить</a>
+              </div>
+              </div>
+            <br>
+            {% endfor %}
+    {% endblock %}

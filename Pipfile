@@ -16,6 +16,8 @@ jsmin = "*"
 flask-login = "*"
 flask-session = "*"
 redis = "*"
+flask-security = "*"
+bcrypt = "*"
 
 [dev-packages]
 

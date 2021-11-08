@@ -1,23 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'admin/dashboard.html' %}
 {% block title %}
 Добавление товара
 {% endblock %}
 {% block content %}
 <div class="container">
     <h1>
-        Добавление товара
+        Добавление услуги
     </h1>
     {% for msg in get_flashed_messages() %}
     <div class="container">
         <p>{{msg}}</p>
     </div>
     {% endfor %}
-    <form method="POST" action="{{ url_for('create') }}">
+    <form method="POST" action="{{ url_for('create', username=current_user.username) }}">
         {{ form.csrf_token }}
         {{ form.title(size=100, class="form-control", placeholder="Введите название") }}
         {% if form.title.errors %}
             <ul class="errors">
                  {% for error in form.title.errors %}
+                    <li>{{ error }}</li>
+                 {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        {{ form.description(step=0.01, class="form-control", placeholder="Введите описание услуги...") }}
+        {% if form.description.errors %}
+            <ul class="errors">
+                 {% for error in form.description.errors %}
                     <li>{{ error }}</li>
                  {% endfor %}
             </ul>

@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask_login import UserMixin
+from flask_security import UserMixin, RoleMixin, SQLAlchemyUserDatastore
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 
@@ -24,7 +24,14 @@ class Main:
             return False
 
 
-class User(UserMixin, db.Model, Main):
+roles_users = db.Table(
+                        'roles_users',
+                        db.Column('user_id', db.Integer(), db.ForeignKey('eshop_User.id')),
+                        db.Column('role_id', db.Integer(), db.ForeignKey('eshop_Role.id'))
+                      )
+
+
+class User(db.Model, UserMixin, Main):
 
     __tablename__ = 'eshop_User'
 
@@ -55,6 +62,8 @@ class User(UserMixin, db.Model, Main):
         db.DateTime,
         default=datetime.utcnow
     )
+    active = db.Column(db.Boolean(), default=True)
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, email, username, name):
         self.email = email
@@ -71,6 +80,18 @@ class User(UserMixin, db.Model, Main):
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
+
+
+class Role(db.Model, RoleMixin, Main):
+
+    __tablename__ = 'eshop_Role'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(100), unique=True)
+    description = db.Column(db.String(255))
+
+
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 
 class Product(db.Model, Main):
@@ -93,7 +114,7 @@ class Product(db.Model, Main):
         db.Boolean,
         default=True
     )
-    text = db.Column(
+    description = db.Column(
         db.Text,
         nullable=False
     )
@@ -102,11 +123,11 @@ class Product(db.Model, Main):
         db.ForeignKey('eshop_User.email')
     )
 
-    def __init__(self, title, price, creator):
+    def __init__(self, title, description, price, creator):
         self.title = title
+        self.description = description
         self.price = price
         self.creator = creator
-        self.text = 'text'
 
     def __repr__(self):
         return f'{self.title}'
