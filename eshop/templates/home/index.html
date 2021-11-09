@@ -22,8 +22,11 @@
               <li>
                 {{ product.description }}
               </li>
+              <li>
+                {{ product.creator }}
+              </li>
             </ul>
-            <a type="button" class="w-100 btn btn-lg btn-outline-primary" href="#">Купить</a>
+            <a type="button" class="w-100 btn btn-lg btn-outline-primary" href="{{ url_for('purchase', product_id=product.id) }}">Купить</a>
           </div>
         </div>
       </div>

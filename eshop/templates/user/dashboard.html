@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="offset-md-2 col-2"></div>
+            <div class="col-4">
+                <h1>Тут будет панель инструментов ЮЗЕРА</h1>
+            </div>
+            <div class="col-4">
+                <a class="nav-link px-3" href="{{ url_for('auth_bp.logout') }}">Выход</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

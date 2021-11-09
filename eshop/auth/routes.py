@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, flash, url_for
-from flask_login import login_required, logout_user, current_user, login_user
+from flask_security import login_required, logout_user, current_user, login_user
 from eshop import login_manager, security
 from eshop.forms import SignupForm, LoginForm
 from eshop.models import User, db
@@ -19,9 +19,9 @@ def create_role():
     Зарисовки под использование Flask Security
     :return:
     """
-    add_role = security.datastore.create_role(name='editor', description='Edit products')
-    db.session.add(add_role)
-    db.session.commit()
+    # add_role = security.datastore.create_role(name='editor', description='Edit products')
+    # db.session.add(add_role)
+    # db.session.commit()
 
 
 @login_manager.user_loader

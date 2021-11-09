@@ -8,7 +8,11 @@
           <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('about') }}">О нас</a>
           <a class="btn btn-outline-warning" href="{{ url_for('auth_bp.login') }}">Войти</a>
         {% else %}
-          <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('dashboard', username=current_user.username) }}">Привет, {{ current_user.name }}</a>
+          {% if current_user.has_role('editor') %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('dashboard', username=current_user.username) }}">Привет, {{ current_user.name }}</a>
+          {% else %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('user_dashboard', username=current_user.username) }}">Привет, {{ current_user.name }}</a>
+          {% endif %}
         {% endif %}
       </nav>
     </div>

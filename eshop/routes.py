@@ -1,8 +1,19 @@
 from flask import render_template, request, redirect, flash, url_for, session, current_app as app
-from flask_login import current_user
-from flask_security import login_required
-from .models import Product, User
+from flask_security import login_required, current_user, roles_required
+from .models import Product, User, Role
 from .forms import CreateForm
+from . import security, db
+
+
+# Тестовая функция
+@app.before_first_request
+def test_role_func():
+    user_id = role_id = 1
+    user = User.query.get(user_id)
+    role = Role.query.get(role_id)
+    add_user_role = security.datastore.add_role_to_user(user, role)
+    # db.session.add(add_user_role)
+    db.session.commit()
 
 
 @app.route('/')
@@ -16,9 +27,28 @@ def about():
     return render_template('home/about.html')
 
 
+# user
+@app.route('/dashboard/<username>')
+@login_required
+def user_dashboard(username):
+    """
+    Страница панели инструментов юзера
+    :param username:
+    :return: страницу панели инструментов юзера
+    """
+    return render_template('user/dashboard.html', current_user=current_user)
+
+
+@app.route('/purchase/<int:product_id>')
+@login_required
+def purchase(product_id):
+    product = Product.query.get_or_404(product_id)
+    return render_template('user/purchase.html', product=product)
+
+
 # admin
 @app.route('/dashboard/<username>/create', methods=['POST', 'GET'])
-@login_required
+@roles_required('editor')
 def create(username):
     """
     Создание услуг на сайте
@@ -41,7 +71,7 @@ def create(username):
 
 
 @app.route('/dashboard/<username>')
-@login_required
+@roles_required('editor')
 def dashboard(username):
     """
     Страница панели инструментов
@@ -52,7 +82,7 @@ def dashboard(username):
 
 
 @app.route('/dashboard/<username>/products')
-@login_required
+@roles_required('editor')
 def dashboard_products(username):
     """
     Список услуг пользователся на странице панели инструментов
@@ -64,7 +94,7 @@ def dashboard_products(username):
 
 
 @app.route('/dashboard/<username>/products/<int:product_id>')
-@login_required
+@roles_required('editor')
 def dashboard_product(username, product_id):
     """
     Редактирование услуги
@@ -80,7 +110,7 @@ def dashboard_product(username, product_id):
 
 
 @app.route('/dashboard/<username>/<int:product_id>/delete')
-@login_required
+@roles_required('editor')
 def dashboard_product_delete(username, product_id):
     """
     Удаление услуги
@@ -96,7 +126,7 @@ def dashboard_product_delete(username, product_id):
 
 
 @app.route('/users')
-@login_required
+@roles_required('editor')
 def user_list():
     users = User.query.all()
     return render_template('admin/users.html', users=users)
